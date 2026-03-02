@@ -20,7 +20,7 @@ COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 RUN pnpm build
 RUN pnpm prune --prod
 
-FROM node:20.20.0-alpine AS deploy
+FROM gcr.io/distroless/nodejs20-debian13 AS deploy
 
 USER 1000
 
@@ -38,4 +38,4 @@ ENV CLOUDFLARE_PUBLIC_URL="https://example.com"
 
 EXPOSE 3333
 
-CMD ["node", "dist/server.mjs"]
+CMD ["dist/server.mjs"]
