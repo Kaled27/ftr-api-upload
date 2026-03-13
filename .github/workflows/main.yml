@@ -29,8 +29,8 @@ jobs:
       - name: Build and push Docker image to AWS ECR
         id: build-and-push-image
         env: 
-            ECR_REPOSITORY=${{ vars.AWS_ECR_REPOSITORY }}
-            ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY=${{ vars.AWS_ECR_REPOSITORY }}
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
         run: | 
           docker build -t api-upload:v3 .
           docker tag api-upload:v3 938595516706.dkr.ecr.us-east-2.amazonaws.com/$ECR_REPOSITORY:v3
