@@ -65,16 +65,18 @@ jobs:
 
       - name: Run Trivy scanner
         id: run-trivy-scanner
-        uses: aquasecurity/trivy-action@v0.34.0
-        with:
-          scan-type: image
-          image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:test
-          format: table
-          ignore-unfixed: true
-          vuln-type: os,library
-          severity: CRITICAL,HIGH,MEDIUM,LOW
-          exit-code: '0'
-          trivy-version: '0.64.1'
+        env:
+          IMAGE_REF: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:test
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.69.1 image \
+            --format table \
+            --ignore-unfixed \
+            --vuln-type os,library \
+            --severity CRITICAL,HIGH,MEDIUM,LOW \
+            --exit-code 0 \
+            "$IMAGE_REF"
       
       - name: Build and push the image to AWS ECR
         uses: docker/build-push-action@v6
